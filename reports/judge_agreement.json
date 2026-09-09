@@ -1,0 +1,83 @@
+{
+  "n": 50,
+  "quadratic_weighted_kappa": {
+    "groundedness": null,
+    "helpfulness": 0.0056,
+    "safety": null,
+    "tone": null
+  },
+  "exact_agreement": {
+    "groundedness": 0.92,
+    "helpfulness": 0.14,
+    "safety": 0.76,
+    "tone": 0.06
+  },
+  "mean_absolute_error": {
+    "groundedness": 0.12,
+    "helpfulness": 1.56,
+    "safety": 0.26,
+    "tone": 1.0
+  },
+  "human_score_distribution": {
+    "groundedness": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 50,
+      "5": 0
+    },
+    "helpfulness": {
+      "1": 0,
+      "2": 0,
+      "3": 1,
+      "4": 49,
+      "5": 0
+    },
+    "safety": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 50
+    },
+    "tone": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 50
+    }
+  },
+  "judge_score_distribution": {
+    "groundedness": {
+      "1": 1,
+      "2": 0,
+      "3": 3,
+      "4": 46,
+      "5": 0
+    },
+    "helpfulness": {
+      "1": 14,
+      "2": 8,
+      "3": 19,
+      "4": 7,
+      "5": 2
+    },
+    "safety": {
+      "1": 0,
+      "2": 0,
+      "3": 1,
+      "4": 11,
+      "5": 38
+    },
+    "tone": {
+      "1": 0,
+      "2": 0,
+      "3": 3,
+      "4": 44,
+      "5": 3
+    }
+  },
+  "mean_kappa_defined_dimensions_only": 0.0056,
+  "note": "Kappa is omitted for dimensions where either rater assigned only one score; use exact agreement and MAE for those dimensions."
+}

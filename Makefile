@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: prepare golden train evaluate judge-packet test all
+.PHONY: prepare golden train evaluate judge-packet judge-agreement test all
 
 prepare:
 	$(PYTHON) -m src.prepare_data --input data/raw/twcs.csv --output data/apple_support_slice.csv
@@ -16,7 +16,10 @@ evaluate: train
 judge-packet:
 	$(PYTHON) -m src.make_judge_packet --predictions reports/predictions.csv --output data/judge_calibration_template.csv
 
+judge-agreement:
+	$(PYTHON) -m src.judge --calibration data/judge_calibration.csv > reports/judge_agreement.json
+
 test:
 	$(PYTHON) -m unittest discover -s tests -v
 
-all: test evaluate
+all: test evaluate judge-agreement

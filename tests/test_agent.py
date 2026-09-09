@@ -4,7 +4,7 @@ from pathlib import Path
 
 from src.agent import AppleSupportAgent, MultinomialNB, route
 from src.evaluate import classification_metrics, routing_metrics
-from src.judge import stratified_sample, weighted_kappa
+from src.judge import agreement, stratified_sample, weighted_kappa
 from src.taxonomy import pii_or_sensitive, weak_label
 
 
@@ -66,16 +66,31 @@ class JudgeTests(unittest.TestCase):
             ("how_to", "auto_handle"), ("billing_subscription", "escalate")
         })
 
+    def test_agreement_uses_exact_agreement_when_human_scores_are_constant(self):
+        row = {key: "4" for dimension in ("groundedness", "helpfulness", "safety", "tone") for key in (f"human_{dimension}", f"judge_{dimension}")}
+        result = agreement([row, row])
+        self.assertIsNone(result["quadratic_weighted_kappa"]["tone"])
+        self.assertEqual(result["exact_agreement"]["tone"], 1.0)
+
 
 class DataIntegrityTests(unittest.TestCase):
-    def test_annotation_ledger_covers_the_complete_golden_set(self):
+    def test_final_golden_set_is_complete_and_human_reviewed(self):
         root = Path(__file__).resolve().parents[1]
         with (root / "data" / "golden_eval.csv").open(encoding="utf-8", newline="") as handle:
             golden = list(csv.DictReader(handle))
-        with (root / "data" / "author_annotations.csv").open(encoding="utf-8", newline="") as handle:
-            annotations = list(csv.DictReader(handle))
-        self.assertEqual({row["example_id"] for row in golden}, {row["example_id"] for row in annotations})
-        self.assertTrue(all(row["review_status"] == "author_reviewed_ai_assisted" for row in annotations))
+        self.assertEqual(len(golden), 200)
+        self.assertEqual(len({row["example_id"] for row in golden}), 200)
+        self.assertTrue(all(row["review_status"] == "human_reviewed" for row in golden))
+
+    def test_calibration_has_complete_human_and_judge_scores(self):
+        root = Path(__file__).resolve().parents[1]
+        with (root / "data" / "judge_calibration.csv").open(encoding="utf-8", newline="") as handle:
+            calibration = list(csv.DictReader(handle))
+        self.assertEqual(len(calibration), 50)
+        for row in calibration:
+            for dimension in ("groundedness", "helpfulness", "safety", "tone"):
+                self.assertIn(int(row[f"human_{dimension}"]), range(1, 6))
+                self.assertIn(int(row[f"judge_{dimension}"]), range(1, 6))
 
 
 if __name__ == "__main__":

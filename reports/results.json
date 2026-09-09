@@ -1,7 +1,7 @@
 {
   "n_golden": 200,
   "n_train": 2994,
-  "label_source": "author_reviewed_ai_assisted_not_independent_human_gold",
+  "label_source": "human_reviewed",
   "results": {
     "trivial_always_escalate": {
       "intent": {

@@ -1,7 +1,8 @@
-"""Opt-in LLM-as-judge for reply quality and human-agreement analysis.
+"""Opt-in LLM-as-judge and calibration-agreement analysis for reply quality.
 
-The main evaluation never fabricates a judge result. This module calls the
-OpenAI Responses API only when `OPENAI_API_KEY` is explicitly available.
+Fresh judging calls the OpenAI Responses API only when `OPENAI_API_KEY` is
+explicitly available. Calibration mode evaluates only the supplied score file;
+it never creates ratings itself.
 """
 from __future__ import annotations
 
@@ -138,12 +139,31 @@ def weighted_kappa(left: List[int], right: List[int], levels: int = 5) -> float:
 
 def agreement(calibration: List[Mapping[str, str]]) -> Dict[str, object]:
     dimensions = ("groundedness", "helpfulness", "safety", "tone")
-    output: Dict[str, object] = {"n": len(calibration), "quadratic_weighted_kappa": {}}
+    output: Dict[str, object] = {
+        "n": len(calibration),
+        "quadratic_weighted_kappa": {},
+        "exact_agreement": {},
+        "mean_absolute_error": {},
+        "human_score_distribution": {},
+        "judge_score_distribution": {},
+    }
+    defined_kappas = []
     for dimension in dimensions:
         human = [int(row[f"human_{dimension}"]) for row in calibration]
         judge = [int(row[f"judge_{dimension}"]) for row in calibration]
-        output["quadratic_weighted_kappa"][dimension] = weighted_kappa(human, judge)
-    output["mean_kappa"] = round(statistics.mean(output["quadratic_weighted_kappa"].values()), 4)
+        # Kappa needs variation in both raters. A constant rater makes the
+        # expected-disagreement denominator zero, so reporting 0 would be
+        # misleading; exact agreement and MAE remain well-defined.
+        kappa = weighted_kappa(human, judge) if len(set(human)) > 1 and len(set(judge)) > 1 else None
+        output["quadratic_weighted_kappa"][dimension] = kappa
+        if kappa is not None:
+            defined_kappas.append(kappa)
+        output["exact_agreement"][dimension] = round(sum(a == b for a, b in zip(human, judge)) / len(human), 4)
+        output["mean_absolute_error"][dimension] = round(sum(abs(a - b) for a, b in zip(human, judge)) / len(human), 4)
+        output["human_score_distribution"][dimension] = {str(score): human.count(score) for score in range(1, 6)}
+        output["judge_score_distribution"][dimension] = {str(score): judge.count(score) for score in range(1, 6)}
+    output["mean_kappa_defined_dimensions_only"] = round(statistics.mean(defined_kappas), 4) if defined_kappas else None
+    output["note"] = "Kappa is omitted for dimensions where either rater assigned only one score; use exact agreement and MAE for those dimensions."
     return output
 
 

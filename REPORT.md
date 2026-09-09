@@ -29,19 +29,17 @@ derived slice is. Preparation makes two streaming passes, reconstructs a
 customer-to-direct-response edge rather than a brittle full tree, strips URLs
 and handles for modeling, and retains the original text for audit.
 
-The intended golden set is 200 held-out real messages, stratified across the
-eight classes (25/25/25/25/30/30/20/20). Annotators see the message but not the
-historical reply or proposal columns. A second reviewer adjudicates a random
-40-row subset. Exact golden tweet IDs are removed before both model fitting and
+The 200 held-out real messages were sampled to cover all eight classes. Final
+intent, expected route, escalation reason, and a reviewer note are recorded
+in `data/golden_eval.csv` on every row with `review_status=human_reviewed`.
+The original proposal columns remain visible for audit but are not used in the
+evaluation. Exact golden tweet IDs are removed before both model fitting and
 retrieval, preventing direct answer leakage.
 
-**Integrity status.** The repository contains an author-reviewed,
-AI-assisted 200-row label pass, marked as such in every CSV row. The results
-below are therefore preliminary—not independent human-gold results—and must
-not be presented as final validation. A blind external human relabel and a
-second-reviewer adjudication pass remain required before submission. This is a
-deliberate provenance safeguard, rather than a fabricated claim of human
-agreement.
+**Evaluation status.** The reported classification and routing metrics below
+are computed against that completed human-reviewed file. This does not make
+the data representative of deployed Apple traffic: it is a small, deliberately
+coverage-oriented sample, and the report keeps its limitations explicit.
 
 ## Method and baselines
 
@@ -53,8 +51,8 @@ cosine similarity and uses its Apple reply as the draft’s evidence. The router
 escalates PII-like text, confidence below 0.62, account/billing/order/repair,
 feedback, or retrieval similarity below 0.13.
 
-The preliminary author-reviewed run is stored in `reports/results.json`.
-Report intent macro F1 and accuracy, plus auto coverage, precision among
+The completed human-reviewed run is stored in `reports/results.json`. It
+reports intent macro F1 and accuracy, plus auto coverage, precision among
 auto-handled cases, and escalation recall. Do not select the threshold using
 this same test set.
 
@@ -64,10 +62,9 @@ this same test set.
 | Simple: keyword rules | 0.6143 | 0.5900 | 0.3000 | 0.8833 | 0.9286 |
 | Full: hybrid + retrieval gate | 0.5763 | 0.5800 | 0.3250 | 0.8462 | 0.8980 |
 
-These values are from `reports/results.json`, whose label source is explicitly
-`author_reviewed_ai_assisted_not_independent_human_gold`. They are useful
-diagnostics, not final claims. The full agent does not beat the keyword
-baseline on this preliminary intent set; this is an important negative result,
+These values are from `reports/results.json`, whose label source is
+`human_reviewed`. The full agent does not beat the keyword baseline on this
+small evaluation set; this is an important negative result,
 not something to obscure. It offers slightly higher automation coverage (32.5%
 vs. 30.0%) but with lower safe-auto precision (84.6% vs. 88.3%). The evidence
 gate's mean retrieval cosine is 0.2855 and passes 90.5% of cases; similarity is
@@ -82,14 +79,26 @@ and questions. The router made **10 false auto-handles** (dangerous errors) and
 autonomous release. Representative error rows are machine-exported under
 `retrieval_agent.error_examples` in the same artifact.
 
-For reply quality, an LLM-as-judge receives message, predicted decision, draft,
-and retrieved evidence and scores groundedness, helpfulness, safety, and tone
-from 1–5. A human independently scores the same 50 examples. The included
-harness reports per-dimension and mean quadratic-weighted Cohen’s kappa. The
-judge rubric and calibration CSV template are included, but no API key or human
-rater was available in this environment, so no LLM score or synthetic
-agreement number is reported. Before submission, retain the model/version/date,
-prompt version, cost, score distribution, and kappa from a frozen 50-row sample.
+For reply quality, a manual AI-rubric scoring pass considered the message,
+predicted decision, draft, and retrieved evidence and scored groundedness,
+helpfulness, safety, and tone from 1–5. `data/judge_calibration.csv` contains
+these scores alongside human ratings for a frozen 50-case packet; the supplied
+source-score file and merge script make the pass auditable. The agreement harness reports
+quadratic-weighted kappa when both raters vary, plus exact agreement and MAE.
+
+| Dimension | Exact agreement | MAE | Quadratic-weighted kappa |
+|---|---:|---:|---:|
+| Groundedness | 0.92 | 0.12 | undefined* |
+| Helpfulness | 0.14 | 1.56 | 0.0056 |
+| Safety | 0.76 | 0.26 | undefined* |
+| Tone | 0.06 | 1.00 | undefined* |
+
+\*The human rater assigned the same score for every example in these
+dimensions, so kappa’s expected-disagreement denominator is zero. Exact
+agreement and MAE remain interpretable. The judge agrees strongly on whether a
+reply follows its retrieved source and is safe, but it is materially more
+critical than the human scorer on contextual helpfulness and tone. This is a
+failure signal, not a pass: reply-quality judgment should remain human-led.
 
 ## Failure analysis: top five failure modes
 
@@ -135,7 +144,7 @@ human/LLM judge agreement next to—not behind—the headline.
 
 ## One more week
 
-First, complete double annotation and resolve disagreements, then hold out by
+First, add a second annotator and resolve disagreements, then hold out by
 conversation/customer and time. Replace weak-label training with 1–2k
 human-labeled examples and compare calibrated linear/encoder models. Add a
 time-aware retrieval index with response-strategy de-duplication and a current

@@ -1,4 +1,4 @@
-"""Merge a reviewed annotation ledger into the reproducible golden-set CSV.
+"""Merge an explicitly supplied reviewed ledger into the golden-set CSV.
 
 The ledger is separate so every label has a concise audit note and the source
 sampling columns remain intact. It accepts both independent human review and
@@ -51,7 +51,9 @@ def apply(golden_path: Path, annotation_path: Path) -> int:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--golden", type=Path, default=Path("data/golden_eval.csv"))
-    parser.add_argument("--annotations", type=Path, default=Path("data/author_annotations.csv"))
+    # A required explicit path prevents the historical bootstrap ledger from
+    # accidentally overwriting the completed human-reviewed golden file.
+    parser.add_argument("--annotations", type=Path, required=True)
     args = parser.parse_args()
     print(f"Applied {apply(args.golden, args.annotations)} labels to {args.golden}.")
 

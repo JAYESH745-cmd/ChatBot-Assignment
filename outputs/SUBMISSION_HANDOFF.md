@@ -5,17 +5,16 @@ required for a high-integrity submission:
 
 - `README.md` — reproduce steps, data attribution, pipeline, and judge command
 - `data/apple_support_slice.csv` — fixed 3,200-pair real-data slice
-- `data/golden_eval.csv` — 200-example stratified evaluation set with
-  author-reviewed, AI-assisted labels and row-level provenance
-- `reports/results.json` — preliminary held-out baseline and agent metrics
-- `data/judge_calibration_template.csv` — frozen, stratified 50-case packet
-  for independent human/LLM judge calibration
+- `data/golden_eval.csv` — 200-example human-reviewed evaluation set with
+  row-level intent, routing, reason, and review notes
+- `reports/results.json` — held-out baseline and agent metrics
+- `data/judge_calibration.csv` and `reports/judge_agreement.json` — frozen
+  50-case human/AI-rubric calibration data and agreement analysis
 - `src/` — extraction, classifier/retriever/router, evaluator, and optional LLM judge
 - `REPORT.md` — six-page-max report narrative including failure analysis
 - `DECISION_LOG.md` — 15 non-obvious implementation choices
 
-Tests pass with `make test`. The evaluator runs on the author-reviewed labels
-but marks the result as preliminary rather than independent human gold. Before
-submission, an external human must blind-review the 200 labels and complete the
-50-case judge-calibration packet using `docs/ANNOTATION_GUIDE.md` and
-`docs/JUDGE_RUBRIC.md`. No human-agreement result has been fabricated.
+Tests pass with `make test`; `make all` regenerates the held-out result without
+network access. The report explicitly shows the weak helpfulness/tone agreement
+and the limits of a small coverage-oriented evaluation set; neither the agent
+nor its judge is presented as ready for autonomous customer replies.

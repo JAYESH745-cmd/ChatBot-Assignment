@@ -22,7 +22,9 @@ LLM judge and do not show the model rationale until they submit their rating.
 2. Ask one human rater who did not author the draft to score all four
    dimensions using this file.
 3. Run `src.judge` on exactly the same frozen 50 rows and retain the model ID,
-   prompt text, date, API response IDs if allowed, and cost.
+   prompt text, date, API response IDs if allowed, and cost. If the pass is
+   manual AI-assisted scoring rather than an API run, label it as such and
+   retain the source scores and notes; do not represent it as an API call.
 4. Join both sets by `example_id` into `data/judge_calibration.csv` with the
    headers below. Compute quadratic-weighted Cohen's kappa with the provided
    command.

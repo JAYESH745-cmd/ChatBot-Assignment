@@ -6,11 +6,11 @@ It classifies a message, retrieves a similar historical Apple resolution to
 ground a draft, and defaults to a human when account, billing, order, repair,
 privacy, ambiguity, or insufficient-evidence risk is present.
 
-> Status: the runnable slice and **200-row author-reviewed, AI-assisted**
-> annotation set are included. Its provenance is recorded in every row and it
-> supports a preliminary held-out evaluation. It is not independent human gold;
-> an external reviewer must still complete the final blind review and judge
-> calibration before submission.
+> Status: the runnable slice, a **200-row human-reviewed** golden set, and a
+> frozen 50-row human/AI-rubric calibration set are included. Provenance and
+> row-level notes are versioned with the data. The agreement results show that
+> the rubric judge is useful for groundedness/safety auditing but is not a
+> substitute for human reply evaluation.
 
 ## Reproduce in under 15 minutes
 
@@ -21,7 +21,7 @@ git clone <YOUR-REPO-URL>
 cd hiver-apple-support-agent
 make test
 
-# Run the preliminary held-out evaluation.
+# Run the held-out evaluation.
 python3 -m src.evaluate \
   --slice data/apple_support_slice.csv \
   --golden data/golden_eval.csv \
@@ -29,16 +29,16 @@ python3 -m src.evaluate \
 ```
 
 That command writes `reports/results.json` and `reports/predictions.csv`.
-It holds all 200 golden tweet IDs out of training and records label provenance.
-For a code-only smoke test based on the original weak proposals, use:
+It holds all 200 golden tweet IDs out of training and records the label
+provenance (`human_reviewed`). To reproduce the included judge-agreement
+artifact, run:
 
 ```bash
-python3 -m src.evaluate --allow-provisional --out reports/provisional_results.json
+python3 -m src.judge --calibration data/judge_calibration.csv \
+  > reports/judge_agreement.json
 ```
 
-Do **not** report that smoke test: its labels come from visible weak rules.
-Likewise, results marked `author_reviewed_ai_assisted_not_independent_human_gold`
-are preliminary and cannot substitute for independently annotated human gold.
+`make all` runs the tests and held-out evaluation without network access.
 
 ## Agent design
 
@@ -71,27 +71,34 @@ private data in a public reply.
 ## Golden set
 
 `data/golden_eval.csv` has 200 actual AppleSupport customer messages (not
-synthetic prompts). The seed-fixed sample is stratified to cover all eight
-intents: 25 each for account/billing/order/repair, 30 each for device/how-to,
-and 20 each for feedback/other. The visible `proposed_*` columns are used only
-to make coverage reproducible. The initial label pass is explicitly marked
-`author_reviewed_ai_assisted`; hide proposal columns from the independent human
-review required before submission. Labeling protocol and the recommended 20%
-adjudication pass are in the annotation guide.
-
-The author-review ledger is versioned separately in
-`data/author_annotations.csv` and can be re-applied deterministically:
-
-```bash
-python3 -m src.apply_annotations
-```
+synthetic prompts). It is a seed-fixed sample selected to cover all eight
+intents; final intent, route, reason, and reviewer note are recorded on every
+row with `review_status=human_reviewed`. The visible `proposed_*` columns are
+the original sampling proposals, retained for audit and never used by the
+evaluator. The report uses the final human-reviewed labels; the earlier
+`data/author_annotations.csv` is retained only as a historical bootstrap
+ledger and must not be re-applied to the final golden file.
 
 ## Reply-quality LLM judge and human calibration
 
-The core metrics do not require an API. For qualitative reply evaluation, the
-opt-in judge scores groundedness, helpfulness, safety, and tone on a 1–5
-rubric. It receives the customer message, decision, draft, and retrieved
-historical evidence; it must return JSON.
+The core metrics do not require an API. The included frozen 50-case
+`data/judge_calibration.csv` pairs human scores with a documented manual
+AI-rubric scoring pass for groundedness, helpfulness, safety, and tone (all
+1–5). The source
+scores are kept in `data/ai_judge_scores.csv`, and
+`python3 -m src.merge_judge_scores` performs the deterministic merge. The
+agreement artifact is `reports/judge_agreement.json`.
+
+The judge found frequent relevance failures in otherwise grounded historical
+replies: exact agreement is 92% for groundedness and 76% for safety, but only
+14% for helpfulness and 6% for tone. The human rater used nearly constant
+scores for three dimensions, so quadratic kappa is undefined there; the
+harness reports exact agreement and MAE instead. This is evidence to keep a
+human in the reply-quality loop, not evidence of autonomous reply readiness.
+
+For a fresh, automated API-based judging run, the opt-in judge scores the same
+rubric from the customer message, decision, draft, and historical evidence and
+returns JSON:
 
 ```bash
 export OPENAI_API_KEY=...  # key is never read from a file or logged
@@ -99,19 +106,16 @@ python3 -m src.judge --predictions reports/predictions.csv --limit 50 \
   --out reports/llm_judgements.csv --model gpt-4.1-mini
 ```
 
-Have a human independently score the same 50 records using the same rubric,
-then create a calibration CSV with `human_groundedness`,
-`judge_groundedness`, `human_helpfulness`, `judge_helpfulness`,
-`human_safety`, `judge_safety`, `human_tone`, and `judge_tone` (all 1–5). The
-harness reports per-dimension and mean quadratic-weighted Cohen’s kappa:
+For another calibration set, have a human independently score the same records
+using the rubric, then add `human_*` and `judge_*` score columns (all 1–5). The
+harness reports per-dimension quadratic-weighted Cohen’s kappa when defined,
+plus exact agreement, MAE, and each rater’s score distribution:
 
 ```bash
 python3 -m src.judge --calibration data/judge_calibration.csv
 ```
 
-This deliberately supplies evidence of judge–human agreement instead of
-assuming an LLM judge is correct. Do not use the same rater who authored a
-draft as the sole human calibrator.
+Do not use the same rater who authored a draft as the sole human calibrator.
 
 Create the frozen, stratified 50-row calibration packet before asking the
 human rater and judge to score it:

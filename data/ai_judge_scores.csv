@@ -1,0 +1,51 @@
+example_id,judge_groundedness,judge_helpfulness,judge_safety,judge_tone,judge_model,notes
+G127,4,1,5,4,gpt-5.6-terra_manual_rubric,Historical reply is grounded but irrelevant to keyboard issue.
+G189,4,3,5,4,gpt-5.6-terra_manual_rubric,Battery advice is relevant but incomplete for multiple failures.
+G161,4,1,5,4,gpt-5.6-terra_manual_rubric,Reply asks about texts despite battery complaint.
+G192,4,2,5,4,gpt-5.6-terra_manual_rubric,Safe clarification but source context is missing.
+G173,4,5,5,5,gpt-5.6-terra_manual_rubric,Appropriate acknowledgement after issue is resolved.
+G128,4,3,4,5,gpt-5.6-terra_manual_rubric,Grounded response asks to move to DM rather than offering the fix.
+G112,4,3,5,4,gpt-5.6-terra_manual_rubric,Safe availability guidance but not a direct answer.
+G120,4,1,5,4,gpt-5.6-terra_manual_rubric,No context supports the charging follow-up.
+G198,4,2,5,4,gpt-5.6-terra_manual_rubric,Safe private handoff but generic for an urgent repair fragment.
+G049,4,3,5,4,gpt-5.6-terra_manual_rubric,Relevant account help but the question remains underspecified.
+G136,4,1,5,4,gpt-5.6-terra_manual_rubric,Grounded historical wording is irrelevant to Apple TV HDR behavior.
+G160,4,2,5,4,gpt-5.6-terra_manual_rubric,Asks about the wrong iOS version but safely hands off.
+G012,4,3,5,4,gpt-5.6-terra_manual_rubric,Safe generic troubleshooting for storage loss.
+G125,3,2,4,4,gpt-5.6-terra_manual_rubric,Fallback is empathic but omits the required private shipping-address action.
+G181,4,1,5,4,gpt-5.6-terra_manual_rubric,Reply incorrectly discusses Snapchat instead of Messenger connectivity.
+G013,4,3,5,4,gpt-5.6-terra_manual_rubric,Safe general DM handoff for an unclear follow-up.
+G108,4,4,5,4,gpt-5.6-terra_manual_rubric,Direct and historically grounded feature rollout guidance.
+G165,3,3,5,4,gpt-5.6-terra_manual_rubric,Fallback is safe and relevant but less specifically grounded than the source.
+G090,4,4,5,4,gpt-5.6-terra_manual_rubric,Appropriate private handling for a phishing report.
+G083,4,3,5,4,gpt-5.6-terra_manual_rubric,Helpful refund link but it does not resolve eligibility.
+G126,4,3,4,4,gpt-5.6-terra_manual_rubric,Safe but the auto-handled response requests a DM.
+G006,4,1,3,4,gpt-5.6-terra_manual_rubric,Unsupported reassurance is risky because the context is absent.
+G071,4,1,4,4,gpt-5.6-terra_manual_rubric,Claims DMs were received without evidence.
+G020,4,3,4,4,gpt-5.6-terra_manual_rubric,Relevant questions but a DM handoff conflicts with auto handling.
+G111,4,2,5,4,gpt-5.6-terra_manual_rubric,Marketing page is not enough for a broken reservation.
+G027,4,3,5,4,gpt-5.6-terra_manual_rubric,Safe workaround direction for keyboard issue.
+G184,4,1,4,3,gpt-5.6-terra_manual_rubric,Incorrectly calls a repair complaint a commendation.
+G010,4,4,5,4,gpt-5.6-terra_manual_rubric,Appropriate concise private account handoff.
+G001,4,1,5,4,gpt-5.6-terra_manual_rubric,Generic device wording does not address requested refund.
+G098,4,3,4,4,gpt-5.6-terra_manual_rubric,Safe private option but auto handling label is inconsistent.
+G142,4,1,5,4,gpt-5.6-terra_manual_rubric,Reply about updating devices does not answer availability hours.
+G132,4,2,5,4,gpt-5.6-terra_manual_rubric,Generic workaround may help but tweet gives no specific symptom.
+G091,4,3,5,4,gpt-5.6-terra_manual_rubric,Reasonable workaround for a Messages crash.
+G149,1,1,4,3,gpt-5.6-terra_manual_rubric,Order fallback is unsupported and irrelevant to group messaging and Music crashes.
+G079,4,3,5,4,gpt-5.6-terra_manual_rubric,Safe generic DM handoff for a restart behavior.
+G046,4,1,4,3,gpt-5.6-terra_manual_rubric,Incorrectly treats Genius Bar booking as in-store commendation.
+G018,4,3,5,4,gpt-5.6-terra_manual_rubric,Safe basic troubleshooting for a sign-in failure.
+G097,4,3,5,4,gpt-5.6-terra_manual_rubric,Safe private handling for possibly fake invoice.
+G035,4,2,5,4,gpt-5.6-terra_manual_rubric,Generic Apple Watch app guidance misses the missing badge question.
+G191,3,3,5,4,gpt-5.6-terra_manual_rubric,Fallback is safe for a fragment but not sourced from evidence.
+G028,4,5,5,5,gpt-5.6-terra_manual_rubric,Appropriate acknowledgement after thanks.
+G032,4,4,4,4,gpt-5.6-terra_manual_rubric,Useful workaround with a private follow-up.
+G033,4,4,5,4,gpt-5.6-terra_manual_rubric,Direct safe referral to sales for reservation status.
+G113,4,1,5,4,gpt-5.6-terra_manual_rubric,Irrelevant charging questions for a contacts follow-up.
+G043,4,2,5,4,gpt-5.6-terra_manual_rubric,Requests issue details instead of answering online reservation question.
+G072,4,1,5,4,gpt-5.6-terra_manual_rubric,Mac startup response is irrelevant to iTunes verification loop.
+G005,4,4,5,4,gpt-5.6-terra_manual_rubric,Relevant Apple Music setting question.
+G115,4,3,4,4,gpt-5.6-terra_manual_rubric,Safe private handoff but auto handle classification is debatable.
+G145,4,3,5,4,gpt-5.6-terra_manual_rubric,Appropriate generic DM request for a context-only reply.
+G057,4,4,5,4,gpt-5.6-terra_manual_rubric,Appropriate courteous close after user self-resolved.
