@@ -5,7 +5,7 @@
 3. **Kept direct customer → Apple replies only.** It gives each retrieval item an unambiguous historical resolution without trying to reconstruct noisy multi-branch threads.
 4. **Committed a 3,200-pair slice, not the source corpus.** It keeps reproduction fast and avoids asking reviewers to download 516 MB for a take-home result.
 5. **Created eight operational intents.** They are small enough for reliable annotation and route to materially different operational outcomes.
-6. **Separated weak labels from gold labels.** Transparent rules bootstrap the local model, but blank independent gold fields make self-evaluation impossible by design.
+6. **Separated weak labels from gold labels.** Transparent rules bootstrap the local model; the included author-reviewed, AI-assisted label pass is explicitly provenance-tagged and cannot be mistaken for independently adjudicated human gold.
 7. **Stratified the 200-row gold set.** A pure random sample would underrepresent repair/order cases and make macro F1 volatile.
 8. **Held out exact golden tweet IDs before training and retrieval.** This blocks the clearest retrieval leakage path; author-level overlap remains a reported limitation.
 9. **Used a standard-library Naive Bayes model.** It is runnable in a blank Python 3.9 environment and easy to explain or change live.

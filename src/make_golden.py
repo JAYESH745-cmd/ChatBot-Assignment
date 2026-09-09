@@ -65,7 +65,7 @@ def write_golden(rows: List[dict], output: Path) -> None:
         "proposed_route", "intent", "expected_route", "escalation_reason", "review_status", "review_notes",
     )
     with output.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for i, row in enumerate(rows, 1):
             proposal = weak_label(row["customer_text"])

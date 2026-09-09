@@ -1,0 +1,198 @@
+{
+  "n_golden": 200,
+  "n_train": 2994,
+  "label_source": "author_reviewed_ai_assisted_not_independent_human_gold",
+  "results": {
+    "trivial_always_escalate": {
+      "intent": {
+        "accuracy": 0.08,
+        "macro_f1": 0.0185,
+        "per_intent": {
+          "account_access_security": {
+            "support": 15,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "billing_subscription": {
+            "support": 11,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "order_delivery": {
+            "support": 20,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "repair_service": {
+            "support": 27,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "device_technical_issue": {
+            "support": 81,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "how_to": {
+            "support": 11,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "feedback_complaint": {
+            "support": 19,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0
+          },
+          "other": {
+            "support": 16,
+            "precision": 0.08,
+            "recall": 1.0,
+            "f1": 0.1481
+          }
+        }
+      },
+      "routing": {
+        "auto_coverage": 0.0,
+        "auto_precision": 0.0,
+        "escalation_recall": 1.0,
+        "routing_accuracy": 0.49
+      }
+    },
+    "simple_keyword_rules": {
+      "intent": {
+        "accuracy": 0.59,
+        "macro_f1": 0.6143,
+        "per_intent": {
+          "account_access_security": {
+            "support": 15,
+            "precision": 0.6,
+            "recall": 1.0,
+            "f1": 0.75
+          },
+          "billing_subscription": {
+            "support": 11,
+            "precision": 0.36,
+            "recall": 0.8182,
+            "f1": 0.5
+          },
+          "order_delivery": {
+            "support": 20,
+            "precision": 0.64,
+            "recall": 0.8,
+            "f1": 0.7111
+          },
+          "repair_service": {
+            "support": 27,
+            "precision": 0.84,
+            "recall": 0.7778,
+            "f1": 0.8077
+          },
+          "device_technical_issue": {
+            "support": 81,
+            "precision": 0.8,
+            "recall": 0.2963,
+            "f1": 0.4324
+          },
+          "how_to": {
+            "support": 11,
+            "precision": 0.2333,
+            "recall": 0.6364,
+            "f1": 0.3414
+          },
+          "feedback_complaint": {
+            "support": 19,
+            "precision": 0.85,
+            "recall": 0.8947,
+            "f1": 0.8718
+          },
+          "other": {
+            "support": 16,
+            "precision": 0.45,
+            "recall": 0.5625,
+            "f1": 0.5
+          }
+        }
+      },
+      "routing": {
+        "auto_coverage": 0.3,
+        "auto_precision": 0.8833,
+        "escalation_recall": 0.9286,
+        "routing_accuracy": 0.72
+      }
+    },
+    "retrieval_agent": {
+      "intent": {
+        "accuracy": 0.58,
+        "macro_f1": 0.5763,
+        "per_intent": {
+          "account_access_security": {
+            "support": 15,
+            "precision": 0.6,
+            "recall": 1.0,
+            "f1": 0.75
+          },
+          "billing_subscription": {
+            "support": 11,
+            "precision": 0.3462,
+            "recall": 0.8182,
+            "f1": 0.4865
+          },
+          "order_delivery": {
+            "support": 20,
+            "precision": 0.64,
+            "recall": 0.8,
+            "f1": 0.7111
+          },
+          "repair_service": {
+            "support": 27,
+            "precision": 0.8462,
+            "recall": 0.8148,
+            "f1": 0.8302
+          },
+          "device_technical_issue": {
+            "support": 81,
+            "precision": 0.6829,
+            "recall": 0.3457,
+            "f1": 0.459
+          },
+          "how_to": {
+            "support": 11,
+            "precision": 0.2333,
+            "recall": 0.6364,
+            "f1": 0.3414
+          },
+          "feedback_complaint": {
+            "support": 19,
+            "precision": 0.8095,
+            "recall": 0.8947,
+            "f1": 0.85
+          },
+          "other": {
+            "support": 16,
+            "precision": 0.3333,
+            "recall": 0.125,
+            "f1": 0.1818
+          }
+        }
+      },
+      "routing": {
+        "auto_coverage": 0.325,
+        "auto_precision": 0.8462,
+        "escalation_recall": 0.898,
+        "routing_accuracy": 0.715
+      },
+      "evidence": {
+        "mean_similarity": 0.2855,
+        "share_above_grounding_gate": 0.905,
+        "note": "Similarity is a retrieval diagnostic, not a substitute for a human or LLM quality judgment."
+      }
+    }
+  }
+}

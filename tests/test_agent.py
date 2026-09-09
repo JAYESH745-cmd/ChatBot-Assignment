@@ -1,4 +1,6 @@
+import csv
 import unittest
+from pathlib import Path
 
 from src.agent import AppleSupportAgent, MultinomialNB, route
 from src.judge import stratified_sample, weighted_kappa
@@ -25,6 +27,7 @@ class TaxonomyTests(unittest.TestCase):
 
     def test_sensitive_text_forces_handoff(self):
         self.assertTrue(pii_or_sensitive("my serial number is 123456789"))
+        self.assertFalse(pii_or_sensitive("@115858 can you help?"))
         self.assertEqual(route("how_to", 0.99, "email is __email__", 0.9)[0], "escalate")
         self.assertEqual(route("other", 0.99, "unclear", 0.9)[0], "escalate")
 
@@ -54,6 +57,17 @@ class JudgeTests(unittest.TestCase):
         self.assertEqual({(row["intent"], row["action"]) for row in sample}, {
             ("how_to", "auto_handle"), ("billing_subscription", "escalate")
         })
+
+
+class DataIntegrityTests(unittest.TestCase):
+    def test_annotation_ledger_covers_the_complete_golden_set(self):
+        root = Path(__file__).resolve().parents[1]
+        with (root / "data" / "golden_eval.csv").open(encoding="utf-8", newline="") as handle:
+            golden = list(csv.DictReader(handle))
+        with (root / "data" / "author_annotations.csv").open(encoding="utf-8", newline="") as handle:
+            annotations = list(csv.DictReader(handle))
+        self.assertEqual({row["example_id"] for row in golden}, {row["example_id"] for row in annotations})
+        self.assertTrue(all(row["review_status"] == "author_reviewed_ai_assisted" for row in annotations))
 
 
 if __name__ == "__main__":

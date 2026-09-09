@@ -102,6 +102,11 @@ def rule_scores(text: str) -> Counter:
 
 def pii_or_sensitive(text: str) -> bool:
     prepared = (text or "").lower()
+    # The source corpus anonymizes Twitter handles as numeric @123456 IDs.
+    # They are dataset identifiers, not customer phone/account numbers. URLs
+    # can likewise contain arbitrary long numeric slugs; neither should trigger
+    # the public-safety handoff gate.
+    prepared = re.sub(r"https?://\S+|@[a-z0-9_]+", " ", prepared)
     return bool(
         re.search(r"__email__|__phone_number__|\b\d{6,}\b|\b\d{3}[- ]?\d{3}[- ]?\d{4}\b", prepared)
         or "serial number" in prepared

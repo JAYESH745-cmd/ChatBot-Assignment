@@ -4,5 +4,5 @@ __pycache__/
 .venv/
 artifacts/
 data/raw/
-reports/*.json
-reports/*.csv
+reports/evaluation_console.txt
+reports/provisional_results.json

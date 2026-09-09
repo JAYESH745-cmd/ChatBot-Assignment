@@ -30,13 +30,13 @@ historical reply or proposal columns. A second reviewer adjudicates a random
 40-row subset. Exact golden tweet IDs are removed before both model fitting and
 retrieval, preventing direct answer leakage.
 
-**Integrity status.** The repository currently contains the independently
-sampled worksheet and labeling protocol, but its human label fields are blank.
-Therefore no headline metric below is claimed. The harness deliberately stops
-unless all 200 rows are marked `human_reviewed`. A `--allow-provisional` mode
-exists solely to smoke-test code; it must never be reported because its labels
-come from the same transparent weak-label rules used for training. This is the
-most important limitation to clear before submitting.
+**Integrity status.** The repository contains an author-reviewed,
+AI-assisted 200-row label pass, marked as such in every CSV row. The results
+below are therefore preliminary—not independent human-gold results—and must
+not be presented as final validation. A blind external human relabel and a
+second-reviewer adjudication pass remain required before submission. This is a
+deliberate provenance safeguard, rather than a fabricated claim of human
+agreement.
 
 ## Method and baselines
 
@@ -48,25 +48,34 @@ cosine similarity and uses its Apple reply as the draft’s evidence. The router
 escalates PII-like text, confidence below 0.62, account/billing/order/repair,
 feedback, or retrieval similarity below 0.13.
 
-When human labels are complete, run `python3 -m src.evaluate ...` and replace
-the table below with `reports/results.json` values. Report intent macro F1 and
-accuracy, plus auto coverage, precision among auto-handled cases, and
-escalation recall. Do not select the threshold using this same test set.
+The preliminary author-reviewed run is stored in `reports/results.json`.
+Report intent macro F1 and accuracy, plus auto coverage, precision among
+auto-handled cases, and escalation recall. Do not select the threshold using
+this same test set.
 
 | System | Intent macro F1 | Intent accuracy | Auto coverage | Auto precision | Escalation recall |
 |---|---:|---:|---:|---:|---:|
-| Trivial: always escalate | pending human gold | pending | 0.00 | n/a | pending |
-| Simple: keyword rules | pending human gold | pending | pending | pending | pending |
-| Full: hybrid + retrieval gate | pending human gold | pending | pending | pending | pending |
+| Trivial: always escalate | 0.0185 | 0.0800 | 0.0000 | n/a | 1.0000 |
+| Simple: keyword rules | 0.6143 | 0.5900 | 0.3000 | 0.8833 | 0.9286 |
+| Full: hybrid + retrieval gate | 0.5763 | 0.5800 | 0.3250 | 0.8462 | 0.8980 |
+
+These values are from `reports/results.json`, whose label source is explicitly
+`author_reviewed_ai_assisted_not_independent_human_gold`. They are useful
+diagnostics, not final claims. The full agent does not beat the keyword
+baseline on this preliminary intent set; this is an important negative result,
+not something to obscure. It offers slightly higher automation coverage (32.5%
+vs. 30.0%) but with lower safe-auto precision (84.6% vs. 88.3%). The evidence
+gate's mean retrieval cosine is 0.2855 and passes 90.5% of cases; similarity is
+a retrieval diagnostic rather than reply-quality proof.
 
 For reply quality, an LLM-as-judge receives message, predicted decision, draft,
 and retrieved evidence and scores groundedness, helpfulness, safety, and tone
 from 1–5. A human independently scores the same 50 examples. The included
 harness reports per-dimension and mean quadratic-weighted Cohen’s kappa. The
-report should include the 50-row sample method, model/version/date, prompt
-version, cost, score distribution, and kappa before treating judge scores as
-evidence. API access is intentionally not assumed, and no synthetic agreement
-number is reported.
+judge rubric and calibration CSV template are included, but no API key or human
+rater was available in this environment, so no LLM score or synthetic
+agreement number is reported. Before submission, retain the model/version/date,
+prompt version, cost, score distribution, and kappa from a frozen 50-row sample.
 
 ## Failure analysis: hypotheses to validate on the completed gold set
 

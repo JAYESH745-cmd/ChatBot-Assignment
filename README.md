@@ -6,12 +6,11 @@ It classifies a message, retrieves a similar historical Apple resolution to
 ground a draft, and defaults to a human when account, billing, order, repair,
 privacy, ambiguity, or insufficient-evidence risk is present.
 
-> Status: the runnable slice and **200-row independent annotation worksheet**
-> are included. `golden_eval.csv` deliberately has blank gold-label columns
-> until a human annotator completes them. The harness refuses to print a
-> submission headline until that occurs; `--allow-provisional` is only a
-> pipeline smoke test. This is a guard against evaluating the model against
-> the same weak rules used to bootstrap training.
+> Status: the runnable slice and **200-row author-reviewed, AI-assisted**
+> annotation set are included. Its provenance is recorded in every row and it
+> supports a preliminary held-out evaluation. It is not independent human gold;
+> an external reviewer must still complete the final blind review and judge
+> calibration before submission.
 
 ## Reproduce in under 15 minutes
 
@@ -22,11 +21,7 @@ git clone <YOUR-REPO-URL>
 cd hiver-apple-support-agent
 make test
 
-# 1. Independently label the included 200 rows using docs/ANNOTATION_GUIDE.md.
-#    Fill intent, expected_route, escalation_reason and set
-#    review_status=human_reviewed.
-
-# 2. Run the actual held-out evaluation.
+# Run the preliminary held-out evaluation.
 python3 -m src.evaluate \
   --slice data/apple_support_slice.csv \
   --golden data/golden_eval.csv \
@@ -34,15 +29,16 @@ python3 -m src.evaluate \
 ```
 
 That command writes `reports/results.json` and `reports/predictions.csv`.
-It holds all 200 golden tweet IDs out of training. For a code-only smoke test
-before annotation, use:
+It holds all 200 golden tweet IDs out of training and records label provenance.
+For a code-only smoke test based on the original weak proposals, use:
 
 ```bash
 python3 -m src.evaluate --allow-provisional --out reports/provisional_results.json
 ```
 
-Do **not** report that run: its proposed labels come from the visible weak
-labeling rules.
+Do **not** report that smoke test: its labels come from visible weak rules.
+Likewise, results marked `author_reviewed_ai_assisted_not_independent_human_gold`
+are preliminary and cannot substitute for independently annotated human gold.
 
 ## Agent design
 
@@ -77,9 +73,17 @@ private data in a public reply.
 synthetic prompts). The seed-fixed sample is stratified to cover all eight
 intents: 25 each for account/billing/order/repair, 30 each for device/how-to,
 and 20 each for feedback/other. The visible `proposed_*` columns are used only
-to make coverage reproducible; hide them from annotators. Labeling protocol,
-decision rules, and the recommended 20% adjudication pass are in the annotation
-guide.
+to make coverage reproducible. The initial label pass is explicitly marked
+`author_reviewed_ai_assisted`; hide proposal columns from the independent human
+review required before submission. Labeling protocol and the recommended 20%
+adjudication pass are in the annotation guide.
+
+The author-review ledger is versioned separately in
+`data/author_annotations.csv` and can be re-applied deterministically:
+
+```bash
+python3 -m src.apply_annotations
+```
 
 ## Reply-quality LLM judge and human calibration
 
@@ -107,6 +111,13 @@ python3 -m src.judge --calibration data/judge_calibration.csv
 This deliberately supplies evidence of judge–human agreement instead of
 assuming an LLM judge is correct. Do not use the same rater who authored a
 draft as the sole human calibrator.
+
+Create the frozen, stratified 50-row calibration packet before asking the
+human rater and judge to score it:
+
+```bash
+make judge-packet
+```
 
 ## Recreate the compact slice (optional)
 

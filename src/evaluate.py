@@ -56,12 +56,15 @@ def label_source(rows: Sequence[Mapping[str, str]], allow_provisional: bool) -> 
     reviewed = [row for row in rows if row.get("review_status") == "human_reviewed"]
     if len(reviewed) == len(rows):
         return "human_reviewed"
+    author_reviewed = [row for row in rows if row.get("review_status") == "author_reviewed_ai_assisted"]
+    if len(author_reviewed) == len(rows):
+        return "author_reviewed_ai_assisted_not_independent_human_gold"
     if allow_provisional:
         return "proposed_labels_for_pipeline_smoke_test_only"
     missing = len(rows) - len(reviewed)
     raise ValueError(
         f"{missing} of {len(rows)} golden rows are not human_reviewed. "
-        "Run with --allow-provisional only for a smoke test, never for a headline result."
+        "Author-reviewed AI-assisted labels can be evaluated as preliminary results, but are never independent human gold."
     )
 
 
@@ -134,9 +137,11 @@ def write_predictions(rows: Iterable[Mapping[str, str]], path: Path) -> None:
     rows = list(rows)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=rows[0].keys())
+        writer = csv.DictWriter(handle, fieldnames=rows[0].keys(), lineterminator="\n")
         writer.writeheader()
-        writer.writerows(rows)
+        # CSV permits embedded newlines, but flattening them makes the committed
+        # audit artifact line-addressable and avoids whitespace-only line noise.
+        writer.writerows({key: " ".join(str(value).split()) for key, value in row.items()} for row in rows)
 
 
 def main() -> None:

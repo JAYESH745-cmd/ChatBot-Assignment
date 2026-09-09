@@ -12,8 +12,9 @@ later reply-quality judging, not intent labeling.
 3. Give a short `escalation_reason` for every escalation: `account_or_security`,
    `billing_or_order_action`, `repair_case_specific`, `sensitive_data`,
    `ambiguous`, or `high_emotion`.
-4. Set `review_status=human_reviewed` and leave a note when you had to make a
-   difficult call.
+4. Set `review_status=human_reviewed` only after independent human review, and
+   leave a note when you had to make a difficult call. Do not overwrite an
+   `author_reviewed_ai_assisted` provenance flag without that review.
 
 ## Intent decision rules
 

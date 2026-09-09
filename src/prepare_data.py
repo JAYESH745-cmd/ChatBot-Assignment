@@ -66,7 +66,7 @@ def build_slice(input_path: Path, output_path: Path, sample_size: int, seed: int
     output_path.parent.mkdir(parents=True, exist_ok=True)
     sample.sort(key=lambda item: int(item["tweet_id"]))
     with output_path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=("tweet_id", "customer_id", "created_at", "customer_text", "historical_reply"))
+        writer = csv.DictWriter(handle, fieldnames=("tweet_id", "customer_id", "created_at", "customer_text", "historical_reply"), lineterminator="\n")
         writer.writeheader()
         writer.writerows(sample)
     return seen
