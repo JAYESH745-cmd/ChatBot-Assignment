@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from src.agent import AppleSupportAgent, MultinomialNB, route
+from src.evaluate import classification_metrics, routing_metrics
 from src.judge import stratified_sample, weighted_kappa
 from src.taxonomy import pii_or_sensitive, weak_label
 
@@ -44,6 +45,13 @@ class AgentTests(unittest.TestCase):
     def test_naive_bayes_probabilities_sum_to_one(self):
         model = MultinomialNB().fit([row["customer_text"] for row in ROWS], [weak_label(row["customer_text"]) for row in ROWS])
         self.assertAlmostEqual(sum(model.predict_proba("my order is late").values()), 1.0, places=6)
+
+    def test_metrics_expose_confusion_and_safe_routing_errors(self):
+        intent = classification_metrics(["how_to", "other"], ["other", "other"])
+        routing = routing_metrics(["auto_handle", "escalate"], ["escalate", "auto_handle"])
+        self.assertEqual(intent["confusion_matrix"]["how_to"]["other"], 1)
+        self.assertEqual(routing["false_auto_count"], 1)
+        self.assertEqual(routing["unnecessary_escalation_count"], 1)
 
 
 class JudgeTests(unittest.TestCase):

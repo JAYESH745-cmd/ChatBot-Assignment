@@ -56,13 +56,97 @@
             "recall": 1.0,
             "f1": 0.1481
           }
+        },
+        "confusion_matrix": {
+          "account_access_security": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 15
+          },
+          "billing_subscription": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 11
+          },
+          "order_delivery": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 20
+          },
+          "repair_service": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 27
+          },
+          "device_technical_issue": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 81
+          },
+          "how_to": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 11
+          },
+          "feedback_complaint": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 19
+          },
+          "other": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 16
+          }
         }
       },
       "routing": {
         "auto_coverage": 0.0,
         "auto_precision": 0.0,
         "escalation_recall": 1.0,
-        "routing_accuracy": 0.49
+        "routing_accuracy": 0.49,
+        "false_auto_count": 0,
+        "unnecessary_escalation_count": 102
       }
     },
     "simple_keyword_rules": {
@@ -118,13 +202,97 @@
             "recall": 0.5625,
             "f1": 0.5
           }
+        },
+        "confusion_matrix": {
+          "account_access_security": {
+            "account_access_security": 15,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 0
+          },
+          "billing_subscription": {
+            "account_access_security": 1,
+            "billing_subscription": 9,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 1,
+            "feedback_complaint": 0,
+            "other": 0
+          },
+          "order_delivery": {
+            "account_access_security": 1,
+            "billing_subscription": 0,
+            "order_delivery": 16,
+            "repair_service": 0,
+            "device_technical_issue": 2,
+            "how_to": 0,
+            "feedback_complaint": 1,
+            "other": 0
+          },
+          "repair_service": {
+            "account_access_security": 0,
+            "billing_subscription": 3,
+            "order_delivery": 1,
+            "repair_service": 21,
+            "device_technical_issue": 1,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 1
+          },
+          "device_technical_issue": {
+            "account_access_security": 8,
+            "billing_subscription": 9,
+            "order_delivery": 6,
+            "repair_service": 1,
+            "device_technical_issue": 24,
+            "how_to": 21,
+            "feedback_complaint": 2,
+            "other": 10
+          },
+          "how_to": {
+            "account_access_security": 0,
+            "billing_subscription": 3,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 1,
+            "how_to": 7,
+            "feedback_complaint": 0,
+            "other": 0
+          },
+          "feedback_complaint": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 2,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 17,
+            "other": 0
+          },
+          "other": {
+            "account_access_security": 0,
+            "billing_subscription": 1,
+            "order_delivery": 2,
+            "repair_service": 1,
+            "device_technical_issue": 2,
+            "how_to": 1,
+            "feedback_complaint": 0,
+            "other": 9
+          }
         }
       },
       "routing": {
         "auto_coverage": 0.3,
         "auto_precision": 0.8833,
         "escalation_recall": 0.9286,
-        "routing_accuracy": 0.72
+        "routing_accuracy": 0.72,
+        "false_auto_count": 7,
+        "unnecessary_escalation_count": 49
       }
     },
     "retrieval_agent": {
@@ -180,18 +348,230 @@
             "recall": 0.125,
             "f1": 0.1818
           }
+        },
+        "confusion_matrix": {
+          "account_access_security": {
+            "account_access_security": 15,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 0
+          },
+          "billing_subscription": {
+            "account_access_security": 1,
+            "billing_subscription": 9,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 0,
+            "how_to": 1,
+            "feedback_complaint": 0,
+            "other": 0
+          },
+          "order_delivery": {
+            "account_access_security": 1,
+            "billing_subscription": 0,
+            "order_delivery": 16,
+            "repair_service": 0,
+            "device_technical_issue": 2,
+            "how_to": 0,
+            "feedback_complaint": 1,
+            "other": 0
+          },
+          "repair_service": {
+            "account_access_security": 0,
+            "billing_subscription": 3,
+            "order_delivery": 1,
+            "repair_service": 22,
+            "device_technical_issue": 1,
+            "how_to": 0,
+            "feedback_complaint": 0,
+            "other": 0
+          },
+          "device_technical_issue": {
+            "account_access_security": 8,
+            "billing_subscription": 10,
+            "order_delivery": 6,
+            "repair_service": 1,
+            "device_technical_issue": 28,
+            "how_to": 21,
+            "feedback_complaint": 3,
+            "other": 4
+          },
+          "how_to": {
+            "account_access_security": 0,
+            "billing_subscription": 3,
+            "order_delivery": 0,
+            "repair_service": 0,
+            "device_technical_issue": 1,
+            "how_to": 7,
+            "feedback_complaint": 0,
+            "other": 0
+          },
+          "feedback_complaint": {
+            "account_access_security": 0,
+            "billing_subscription": 0,
+            "order_delivery": 0,
+            "repair_service": 2,
+            "device_technical_issue": 0,
+            "how_to": 0,
+            "feedback_complaint": 17,
+            "other": 0
+          },
+          "other": {
+            "account_access_security": 0,
+            "billing_subscription": 1,
+            "order_delivery": 2,
+            "repair_service": 1,
+            "device_technical_issue": 9,
+            "how_to": 1,
+            "feedback_complaint": 0,
+            "other": 2
+          }
         }
       },
       "routing": {
         "auto_coverage": 0.325,
         "auto_precision": 0.8462,
         "escalation_recall": 0.898,
-        "routing_accuracy": 0.715
+        "routing_accuracy": 0.715,
+        "false_auto_count": 10,
+        "unnecessary_escalation_count": 47
       },
       "evidence": {
         "mean_similarity": 0.2855,
         "share_above_grounding_gate": 0.905,
         "note": "Similarity is a retrieval diagnostic, not a substitute for a human or LLM quality judgment."
+      },
+      "error_examples": {
+        "intent_errors": [
+          {
+            "example_id": "G003",
+            "customer_text": "@AppleSupport Through the speaker and yes I have a case but the speakers are not covered by the case",
+            "gold_intent": "device_technical_issue",
+            "intent": "other",
+            "action": "escalate",
+            "escalation_reason": "ambiguous_or_out_of_scope"
+          },
+          {
+            "example_id": "G005",
+            "customer_text": "@115858 @AppleSupport @115948 @115858 I have subscribed for Apple Music and still it doesn\u2019t work! This should not happen if I\u2019m not wrong! https://t.co/EOJDkgWlU3",
+            "gold_intent": "device_technical_issue",
+            "intent": "billing_subscription",
+            "action": "escalate",
+            "escalation_reason": "account_or_transaction_action"
+          },
+          {
+            "example_id": "G006",
+            "customer_text": "@AppleSupport Messages from other people",
+            "gold_intent": "other",
+            "intent": "device_technical_issue",
+            "action": "escalate",
+            "escalation_reason": "low_intent_confidence"
+          },
+          {
+            "example_id": "G007",
+            "customer_text": "What a disappointment, 3 hours after unboxing Face ID stops working #iPhoneX @AppleSupport https://t.co/mwyzRlSQpo",
+            "gold_intent": "device_technical_issue",
+            "intent": "repair_service",
+            "action": "escalate",
+            "escalation_reason": "repair_case_specific"
+          },
+          {
+            "example_id": "G009",
+            "customer_text": "Why is it that @115858 @AppleSupport can\u2019t make my ringtones (that I paid for) work after three iOS updates? #heldhostagebyapple",
+            "gold_intent": "device_technical_issue",
+            "intent": "billing_subscription",
+            "action": "escalate",
+            "escalation_reason": "account_or_transaction_action"
+          }
+        ],
+        "false_auto": [
+          {
+            "example_id": "G026",
+            "customer_text": "@AppleSupport It says I need to bring employment details but I don\u2019t no what to bring could you help me via dm please",
+            "gold_intent": "other",
+            "intent": "how_to",
+            "action": "auto_handle",
+            "escalation_reason": "safe_general_guidance"
+          },
+          {
+            "example_id": "G038",
+            "customer_text": "@278212 @AppleSupport \ud83c\udd98 same",
+            "gold_intent": "other",
+            "intent": "device_technical_issue",
+            "action": "auto_handle",
+            "escalation_reason": "safe_general_guidance"
+          },
+          {
+            "example_id": "G063",
+            "customer_text": "@AppleSupport iPhone 6+ both connection modes...",
+            "gold_intent": "other",
+            "intent": "device_technical_issue",
+            "action": "auto_handle",
+            "escalation_reason": "safe_general_guidance"
+          },
+          {
+            "example_id": "G065",
+            "customer_text": "@AppleSupport Option set is while using the app and the remaining one is never.",
+            "gold_intent": "other",
+            "intent": "device_technical_issue",
+            "action": "auto_handle",
+            "escalation_reason": "safe_general_guidance"
+          },
+          {
+            "example_id": "G068",
+            "customer_text": "@AppleSupport Can I not just speak to somebody @AppleSupport on the phone and get this sorted.\nThey are quick to take money from me but useless with query https://t.co/RTx8tnO9Ka",
+            "gold_intent": "billing_subscription",
+            "intent": "how_to",
+            "action": "auto_handle",
+            "escalation_reason": "safe_general_guidance"
+          }
+        ],
+        "unnecessary_escalations": [
+          {
+            "example_id": "G007",
+            "customer_text": "What a disappointment, 3 hours after unboxing Face ID stops working #iPhoneX @AppleSupport https://t.co/mwyzRlSQpo",
+            "gold_intent": "device_technical_issue",
+            "intent": "repair_service",
+            "action": "escalate",
+            "escalation_reason": "repair_case_specific"
+          },
+          {
+            "example_id": "G012",
+            "customer_text": "@AppleSupport my storage on my phone is messed up. It's deleted all of my messages and photos so I have nothing on my phone and still full!",
+            "gold_intent": "device_technical_issue",
+            "intent": "device_technical_issue",
+            "action": "escalate",
+            "escalation_reason": "low_intent_confidence"
+          },
+          {
+            "example_id": "G027",
+            "customer_text": "@AppleSupport BITCH I\ufe0f CANT TYPE THE LETTER \u201cII\u201d what\u2019s going on",
+            "gold_intent": "device_technical_issue",
+            "intent": "other",
+            "action": "escalate",
+            "escalation_reason": "ambiguous_or_out_of_scope"
+          },
+          {
+            "example_id": "G028",
+            "customer_text": "@AppleSupport Thank you so much \ud83d\ude2d",
+            "gold_intent": "feedback_complaint",
+            "intent": "feedback_complaint",
+            "action": "escalate",
+            "escalation_reason": "high_emotion_or_feedback"
+          },
+          {
+            "example_id": "G029",
+            "customer_text": "So @AppleSupport my phone is not holding charge no more.",
+            "gold_intent": "device_technical_issue",
+            "intent": "billing_subscription",
+            "action": "escalate",
+            "escalation_reason": "account_or_transaction_action"
+          }
+        ]
       }
     }
   }

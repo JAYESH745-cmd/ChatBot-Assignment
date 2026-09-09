@@ -22,7 +22,12 @@ The primary source is the Customer Support on Twitter corpus. I used a
 seed-fixed 3,200-pair Apple slice, keeping inbound tweets with an explicit
 `@AppleSupport` mention and a direct AppleSupport reply. The explicit mention
 filter avoids cross-brand/thread-linking artefacts found when using response
-edges alone. The raw corpus is not committed; the compact derived slice is.
+edges alone. Apple was selected because this filter still yielded 136,059
+eligible direct pairs in the source: enough historical coverage for retrieval
+without needing the full corpus. The raw corpus is not committed; the compact
+derived slice is. Preparation makes two streaming passes, reconstructs a
+customer-to-direct-response edge rather than a brittle full tree, strips URLs
+and handles for modeling, and retains the original text for audit.
 
 The intended golden set is 200 held-out real messages, stratified across the
 eight classes (25/25/25/25/30/30/20/20). Annotators see the message but not the
@@ -68,6 +73,15 @@ vs. 30.0%) but with lower safe-auto precision (84.6% vs. 88.3%). The evidence
 gate's mean retrieval cosine is 0.2855 and passes 90.5% of cases; similarity is
 a retrieval diagnostic rather than reply-quality proof.
 
+The complete per-intent precision/recall/F1 and 8×8 confusion matrices are in
+`reports/results.json`. Device technical issues are the largest error source:
+only 28/81 were correctly predicted, with 10 mistaken for billing and 21 for
+how-to. This is consistent with short tweets mixing symptoms, subscriptions,
+and questions. The router made **10 false auto-handles** (dangerous errors) and
+**47 unnecessary escalations** (safe but costly errors); it is not ready for
+autonomous release. Representative error rows are machine-exported under
+`retrieval_agent.error_examples` in the same artifact.
+
 For reply quality, an LLM-as-judge receives message, predicted decision, draft,
 and retrieved evidence and scores groundedness, helpfulness, safety, and tone
 from 1–5. A human independently scores the same 50 examples. The included
@@ -77,29 +91,33 @@ rater was available in this environment, so no LLM score or synthetic
 agreement number is reported. Before submission, retain the model/version/date,
 prompt version, cost, score distribution, and kappa from a frozen 50-row sample.
 
-## Failure analysis: hypotheses to validate on the completed gold set
+## Failure analysis: top five failure modes
 
-1. **Context-only follow-ups are under-specified.** `G006` (“Messages from
-   other people”) is a continuation without the prior turn. A first-turn agent
-   should escalate for missing context rather than force an intent. Hypothesis:
-   threaded context will improve intent accuracy but must be split by thread to
-   avoid leakage.
-2. **One message can contain two valid intents.** `G005` says a paid Apple
-   Music subscription “still … doesn’t work.” Billing language may hide a
-   service malfunction. Hypothesis: a primary intent plus issue attributes, or
-   multilabel evaluation, will reduce these boundary errors.
-3. **Screenshot/URL dependence hides the issue.** `G001` and `G004` rely on
-   linked details. Text-only retrieval can ground a safe handoff but cannot
-   diagnose the artifact. Hypothesis: image/OCR evidence and a separate
-   “needs attachment review” gate would improve resolution quality.
-4. **Historical drafts can be stale or too generic.** `G002` asks about a
-   same-day shipment; a retrieved sales URL may be historically faithful but
-   not enough to resolve a current order. Hypothesis: retrieve a response
-   strategy, then verify policy/links against a current source before sending.
-5. **Lexical rules miss symptom wording.** `G003` describes a speaker/case
-   interaction but lacks the initial device keywords and is proposed as
-   `other`. Hypothesis: character n-grams or a small pretrained encoder trained
-   on independently labeled data will help noisy, abbreviated tweets.
+1. **Context-only follow-ups.** `G006`, “Messages from other people,” should
+   be `other → escalate`; the agent predicted `device_technical_issue →
+   escalate`. It selected the safe action but invented a task. Hypothesis:
+   prior turns carry the missing referent. Fix: thread-aware context with a
+   conversation-level split to avoid leakage.
+2. **Subscription language masks a technical failure.** `G005`, an Apple
+   Music subscriber whose service “doesn’t work,” was labelled
+   `device_technical_issue → escalate` but predicted
+   `billing_subscription → escalate`. The route was safe but the intent was
+   wrong. Fix: model a primary technical intent plus a billing-entitlement
+   attribute, or evaluate multilabel alternatives.
+3. **Ambiguity can produce a dangerous false auto.** `G026` mentions
+   “employment details” but gives no product context. Expected `other →
+   escalate`; the agent emitted `how_to → auto_handle`. Fix: require explicit
+   Apple product/service evidence before permitting auto-handling.
+4. **Lexical triggers cause unnecessary escalations.** `G007` reports Face ID
+   stopped working after unboxing. Expected `device_technical_issue →
+   auto_handle`; “unboxing” steered the agent to `repair_service → escalate`.
+   Fix: prioritize the reported symptom over generic hardware terms and tune
+   the repair gate on a validation set.
+5. **Historical grounding does not guarantee a current resolution.** `G002`
+   asks about a same-day shipment; the agent correctly escalates, but the
+   retrieved historical sales-team direction cannot check current order status.
+   Fix: retrieve a response strategy, then verify links/policy against a
+   current approved knowledge source before any send.
 
 ## What is misleading about my headline number?
 

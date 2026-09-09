@@ -55,6 +55,7 @@ are preliminary and cannot substitute for independently annotated human gold.
 `account_access_security`, `billing_subscription`, `order_delivery`,
 `repair_service`, `device_technical_issue`, `how_to`, `feedback_complaint`,
 and `other`. Definitions and boundary cases are in
+[`docs/INTENT_TAXONOMY.md`](docs/INTENT_TAXONOMY.md) and
 [`docs/ANNOTATION_GUIDE.md`](docs/ANNOTATION_GUIDE.md).
 
 ### Auto-handling policy

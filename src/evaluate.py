@@ -38,6 +38,11 @@ def classification_metrics(actual: Sequence[str], predicted: Sequence[str]) -> D
         "accuracy": safe_divide(correct, len(actual)),
         "macro_f1": round(sum(f1s) / len(INTENTS), 4),
         "per_intent": per_intent,
+        "confusion_matrix": {
+            expected: {predicted_intent: sum(a == expected and p == predicted_intent for a, p in zip(actual, predicted))
+                       for predicted_intent in INTENTS}
+            for expected in INTENTS
+        },
     }
 
 
@@ -49,6 +54,8 @@ def routing_metrics(expected: Sequence[str], predicted: Sequence[str]) -> Dict[s
         "auto_precision": safe_divide(sum(expected[i] == "auto_handle" for i in auto_indices), len(auto_indices)),
         "escalation_recall": safe_divide(sum(predicted[i] == "escalate" for i in expected_escalate), len(expected_escalate)),
         "routing_accuracy": safe_divide(sum(a == p for a, p in zip(expected, predicted)), len(expected)),
+        "false_auto_count": sum(a == "escalate" and p == "auto_handle" for a, p in zip(expected, predicted)),
+        "unnecessary_escalation_count": sum(a == "auto_handle" and p == "escalate" for a, p in zip(expected, predicted)),
     }
 
 
@@ -123,6 +130,20 @@ def evaluate(slice_rows: List[dict], golden_rows: List[dict], allow_provisional:
         "mean_similarity": round(sum(evidence_scores) / len(evidence_scores), 4),
         "share_above_grounding_gate": safe_divide(sum(score >= 0.13 for score in evidence_scores), len(evidence_scores)),
         "note": "Similarity is a retrieval diagnostic, not a substitute for a human or LLM quality judgment.",
+    }
+    results["retrieval_agent"]["error_examples"] = {
+        "intent_errors": [
+            {key: row[key] for key in ("example_id", "customer_text", "gold_intent", "intent", "action", "escalation_reason")}
+            for row in prediction_rows if row["gold_intent"] != row["intent"]
+        ][:5],
+        "false_auto": [
+            {key: row[key] for key in ("example_id", "customer_text", "gold_intent", "intent", "action", "escalation_reason")}
+            for row in prediction_rows if row["gold_route"] == "escalate" and row["action"] == "auto_handle"
+        ][:5],
+        "unnecessary_escalations": [
+            {key: row[key] for key in ("example_id", "customer_text", "gold_intent", "intent", "action", "escalation_reason")}
+            for row in prediction_rows if row["gold_route"] == "auto_handle" and row["action"] == "escalate"
+        ][:5],
     }
     return {
         "n_golden": len(golden_rows),
